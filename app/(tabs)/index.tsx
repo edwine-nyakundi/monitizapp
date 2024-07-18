@@ -7,68 +7,101 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
+import { Link } from "expo-router";
 
 export default function HomeScreen() {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || 'light'; // Default to 'light' if colorScheme is null
+
+  const headerBackgroundColor = {
+    light: '#A1CEDC',
+    dark: '#1D3D47'
+  };
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity style={styles.iconMargin}>
-          <Ionicons name="person-outline" size={24} color={Colors[colorScheme].tint} />
-        </TouchableOpacity>
-        <TextInput
-          placeholder="Search"
-          style={[styles.searchInput, { backgroundColor: Colors[colorScheme].background }]}
-        />
-        <View style={styles.iconContainer}>
-          <TouchableOpacity>
-            <Ionicons name="add-circle-outline" size={24} color={Colors[colorScheme].tint} />
-          </TouchableOpacity>
+      <SignedIn>
+        <View style={styles.headerContainer}>
           <TouchableOpacity style={styles.iconMargin}>
-            <Ionicons name="chatbubble-outline" size={24} color={Colors[colorScheme].tint} />
+            <Ionicons name="person-outline" size={24} color={Colors[colorScheme].tint} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconMargin}>
-            <Ionicons name="notifications-outline" size={24} color={Colors[colorScheme].tint} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ParallaxScrollView
-        headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-        headerImage={
-          <Image
-            source={require('@/assets/images/travelsocial_logo.png')}
-            style={styles.reactLogo}
+          <TextInput
+            placeholder="Search"
+            style={[styles.searchInput, { backgroundColor: Colors.SEARCH }]}
           />
-        }
-      >
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="title">MONITIZTRAVELLERS!</ThemedText>
-          <HelloWave />
-        </ThemedView>
+          <View style={styles.iconContainer}>
+            <TouchableOpacity>
+              <Ionicons name="add-circle-outline" size={24} color={Colors[colorScheme].tint} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconMargin}>
+              <Ionicons name="chatbubble-outline" size={24} color={Colors[colorScheme].tint} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconMargin}>
+              <Ionicons name="notifications-outline" size={24} color={Colors[colorScheme].tint} />
+            </TouchableOpacity>
+          </View>
+        </View>
 
-        <ThemedView style={styles.sectionContainer}>
-          <ThemedText type="subtitle">Plan Your Next Adventure</ThemedText>
-          <ThemedText>
-            Start exploring destinations, booking flights, hotels, and activities, all in one place.
-          </ThemedText>
-        </ThemedView>
+        <ParallaxScrollView
+          headerBackgroundColor={headerBackgroundColor}
+          headerImage={
+            <Image
+              source={require('@/assets/images/travelsocial_logo.png')}
+              style={styles.reactLogo}
+            />
+          }
+        >
+          <ThemedView style={styles.titleContainer}>
+            <ThemedText type="title">MONITIZTRAVELLERS!</ThemedText>
+            <HelloWave />
+          </ThemedView>
 
-        <ThemedView style={styles.sectionContainer}>
-          <ThemedText type="subtitle">Connect and Share Experiences</ThemedText>
-          <ThemedText>
-            Connect with fellow travelers, share travel stories, and discover new destinations together.
-          </ThemedText>
-        </ThemedView>
+          <ThemedView style={styles.sectionContainer}>
+            <ThemedText type="subtitle">Plan Your Next Adventure</ThemedText>
+            <ThemedText>
+              Start exploring destinations, booking flights, hotels, and activities, all in one place.
+            </ThemedText>
+          </ThemedView>
 
-        <ThemedView style={styles.sectionContainer}>
-          <ThemedText type="subtitle">Get Started</ThemedText>
-          <ThemedText>
-            Customize your profile, explore travel guides, and plan your journey with ease.
-          </ThemedText>
-        </ThemedView>
-      </ParallaxScrollView>
+          <ThemedView style={styles.sectionContainer}>
+            <ThemedText type="subtitle">Connect and Share Experiences</ThemedText>
+            <ThemedText>
+              Connect with fellow travelers, share travel stories, and discover new destinations together.
+            </ThemedText>
+          </ThemedView>
+
+          <ThemedView style={styles.sectionContainer}>
+            <ThemedText type="subtitle">Get Started</ThemedText>
+            <ThemedText>
+              Customize your profile, explore travel guides, and plan your journey with ease.
+            </ThemedText>
+          </ThemedView>
+        </ParallaxScrollView>
+      </SignedIn>
+      
+      <SignedOut>
+      <ParallaxScrollView
+          headerBackgroundColor={headerBackgroundColor}
+          headerImage={
+            <Image
+              source={require('@/assets/images/travelsocial_logo.png')}
+              style={styles.reactLogo}
+            />
+          }
+        ></ParallaxScrollView>
+        <View style={styles.signedOutContainer}>
+          <ThemedText type="title">Welcome to MonitizTravellers!</ThemedText>
+          <ThemedText>Please sign in or sign up to continue.</ThemedText>
+          <View style={styles.authButtonsContainer}>
+            <Link href="/sign-in" style={styles.authButton}>
+              <ThemedText>Sign In</ThemedText>
+            </Link>
+            <Link href="/sign-up" style={styles.authButton}>
+              <ThemedText>Sign Up</ThemedText>
+            </Link>
+          </View>
+        </View>
+      </SignedOut>
     </ThemedView>
   );
 }
@@ -115,5 +148,21 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     resizeMode: 'contain',
+  },
+  signedOutContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  authButtonsContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  authButton: {
+    marginHorizontal: 10,
+    padding: 10,
+    backgroundColor: '#ccc',
+    borderRadius: 5,
   },
 });

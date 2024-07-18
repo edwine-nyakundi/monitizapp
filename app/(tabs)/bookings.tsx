@@ -56,7 +56,7 @@ export default function BookingsScreen() {
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#E0D0C0', dark: '#503030' }}
-      headerImage={<Ionicons size={310} name="calendar-outline" style={styles.headerImage} />}
+      headerImage={<Ionicons size={200} name="calendar-outline" style={styles.headerImage} />}
     >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Bookings</ThemedText>
